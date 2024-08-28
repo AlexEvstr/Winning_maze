@@ -6,7 +6,7 @@ public class PlaneJoystickController : MonoBehaviour
 {
     [SerializeField] private FixedJoystick _fixedJoystick;
     [SerializeField] private Transform _plane;
-    private float speed = 1f;
+    private float speed = 0.5f;
 
     public void Update()
     {
