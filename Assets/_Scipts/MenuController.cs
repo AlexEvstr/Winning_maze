@@ -9,4 +9,9 @@ public class MenuController : MonoBehaviour
     {
         SceneManager.LoadScene("Game");
     }
+
+    public void OpenPrivacyPolicy()
+    {
+        Application.OpenURL("https://www.google.com/?client=safari");
+    }
 }
