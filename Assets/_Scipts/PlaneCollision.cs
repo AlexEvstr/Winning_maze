@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlaneCollision : MonoBehaviour
 {
+    [SerializeField] private LevelCounter _levelCounter;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Star"))
@@ -12,7 +12,7 @@ public class PlaneCollision : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Finish"))
         {
-            Debug.Log("Finish");
+            _levelCounter.IncreaseLevel();
         }
     }
 }
