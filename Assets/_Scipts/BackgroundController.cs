@@ -5,10 +5,13 @@ public class BackgroundController : MonoBehaviour
 {
     [SerializeField] private Image _backgroundImage;
     [SerializeField] private Sprite[] _backgroundSprites;
+    [SerializeField] private AudioClip _clickSound;
+    private AudioSource _audioSource;
     private int _backgroundIndex;
 
     private void OnEnable()
     {
+        _audioSource = GetComponent<AudioSource>();
         _backgroundIndex = PlayerPrefs.GetInt("ChoosenBG", 0);
         _backgroundImage.sprite = _backgroundSprites[_backgroundIndex];
     }
@@ -22,5 +25,6 @@ public class BackgroundController : MonoBehaviour
         }
         _backgroundImage.sprite = _backgroundSprites[_backgroundIndex];
         PlayerPrefs.SetInt("ChoosenBG", _backgroundIndex);
+        _audioSource.PlayOneShot(_clickSound);
     }
 }

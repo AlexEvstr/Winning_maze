@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class BallControl : MonoBehaviour
 {
-    public float bounceForce = 10f; // Сила отскока
-    public float unstuckThreshold = 0.1f; // Порог скорости для определения застревания
-    public float unstuckForce = 5f; // Сила для выталкивания мяча
+    public float bounceForce = 10f;
+    public float unstuckThreshold = 0.1f;
+    public float unstuckForce = 5f;
+    [SerializeField] private AudioClip _ballSound;
+    [SerializeField] private AudioSource _audioSource;
 
     private Rigidbody2D rb;
 
@@ -15,21 +17,24 @@ public class BallControl : MonoBehaviour
 
     void Update()
     {
-        if (rb.velocity.magnitude < unstuckThreshold)
+        if (rb.velocity.magnitude < unstuckThreshold && MenuController._isEffects == 1)
         {
             Vector2 randomDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
             rb.AddForce(randomDirection * unstuckForce, ForceMode2D.Impulse);
+            _audioSource.PlayOneShot(_ballSound);
         }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (rb.velocity.y <= 0)
+        if (rb.velocity.y <= 0 && MenuController._isEffects == 1)
         {
             Vector2 bounceDirection = new Vector2(rb.velocity.x, 1f).normalized;
 
-            rb.velocity = new Vector2(rb.velocity.x, 0); // Обнуляем текущую вертикальную скорость
-            rb.AddForce(bounceDirection * bounceForce, ForceMode2D.Impulse); // Применяем силу вверх
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+            rb.AddForce(bounceDirection * bounceForce, ForceMode2D.Impulse);
+
+            _audioSource.PlayOneShot(_ballSound);
         }
     }
 }

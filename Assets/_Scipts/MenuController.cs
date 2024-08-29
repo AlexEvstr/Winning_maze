@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,40 +8,49 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject _soundOff;
     [SerializeField] private GameObject _effectsOn;
     [SerializeField] private GameObject _effectsOff;
+    [SerializeField] private AudioClip _clickSound;
+    private AudioSource _audioSource;
 
-    private int _isEffects;
+    public static int _isEffects;
 
     private void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         AudioListener.volume = PlayerPrefs.GetFloat("SoundStatus", 1);
         if (AudioListener.volume == 1)
         {
-            TurnOnSound();
+            _soundOff.SetActive(false);
+            _soundOn.SetActive(true);
         }
         else
         {
-            TurnOffSound();
+            _soundOn.SetActive(false);
+            _soundOff.SetActive(true);
         }
 
         _isEffects = PlayerPrefs.GetInt("Effects", 1);
         if (_isEffects == 1)
         {
-            EnableEffects();
+            _effectsOff.SetActive(false);
+            _effectsOn.SetActive(true);
         }
         else
         {
-            DisableEffects();
+            _effectsOn.SetActive(false);
+            _effectsOff.SetActive(true);
         }
     }
 
     public void PlayButton()
     {
-        SceneManager.LoadScene("Game");
+        _audioSource.PlayOneShot(_clickSound);
+        StartCoroutine(WaitForSound());
     }
 
-    public void OpenPrivacyPolicy()
+    private IEnumerator WaitForSound()
     {
-        Application.OpenURL("https://www.google.com/?client=safari");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Game");
     }
 
     public void TurnOffSound()
@@ -51,6 +59,7 @@ public class MenuController : MonoBehaviour
         _soundOff.SetActive(true);
         AudioListener.volume = 0;
         PlayerPrefs.SetFloat("SoundStatus", 0);
+        _audioSource.PlayOneShot(_clickSound);
     }
 
     public void TurnOnSound()
@@ -59,6 +68,7 @@ public class MenuController : MonoBehaviour
         _soundOn.SetActive(true);
         AudioListener.volume = 1;
         PlayerPrefs.SetFloat("SoundStatus", 1);
+        _audioSource.PlayOneShot(_clickSound);
     }
 
     public void DisableEffects()
@@ -67,6 +77,7 @@ public class MenuController : MonoBehaviour
         _effectsOff.SetActive(true);
         _isEffects = 0;
         PlayerPrefs.SetInt("Effects", _isEffects);
+        _audioSource.PlayOneShot(_clickSound);
     }
 
     public void EnableEffects()
@@ -75,5 +86,6 @@ public class MenuController : MonoBehaviour
         _effectsOn.SetActive(true);
         _isEffects = 1;
         PlayerPrefs.SetInt("Effects", _isEffects);
+        _audioSource.PlayOneShot(_clickSound);
     }
 }

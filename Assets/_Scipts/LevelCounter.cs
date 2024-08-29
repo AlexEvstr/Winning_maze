@@ -10,8 +10,14 @@ public class LevelCounter : MonoBehaviour
     [SerializeField] private StarsGroup[] _starsGroup;
     [SerializeField] private TMP_Text _levelText;
     [SerializeField] private GameObject _plane;
+    [SerializeField] private GameObject _effectLevel;
+    [SerializeField] private GameObject _effectCompleted;
+    [SerializeField] private GameObject _fireWorlEffect;
+    private GameSounds _gameSounds;
+
     private int _currentLevel;
     private int _labyrinthIndex;
+    private int _isEffects;
 
     private void OnEnable()
     {
@@ -19,6 +25,8 @@ public class LevelCounter : MonoBehaviour
         _currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
         _labyrinths[_labyrinthIndex].SetActive(true);
         _levelText.text = _currentLevel.ToString();
+        _isEffects = PlayerPrefs.GetInt("Effects", 1);
+        _gameSounds = GetComponent<GameSounds>();
     }
 
     public void IncreaseLevel()
@@ -30,6 +38,11 @@ public class LevelCounter : MonoBehaviour
     {
         LockFinish();
 
+        if (_isEffects == 1)
+        {
+            StartCoroutine(ShowFireWork());
+        }
+            
         GameObject[] starsGroup = _starsGroup[_labyrinthIndex].Stars;
         foreach (var item in starsGroup)
         {
@@ -45,10 +58,55 @@ public class LevelCounter : MonoBehaviour
         }
         PlayerPrefs.SetInt("CurrentLevel", _currentLevel);
         PlayerPrefs.SetInt("CurrentLabyrinth", _labyrinthIndex);
+
+        if (_isEffects == 1)
+        {
+            yield return new WaitForSeconds(2.0f);
+            ShowEffect();
+        }   
+
         yield return new WaitForSeconds(2.0f);
         _plane.transform.position = new Vector2(0, 3.5f);
         _labyrinths[_labyrinthIndex].SetActive(true);
         _levelText.text = _currentLevel.ToString();
+    }
+
+    private IEnumerator ShowFireWork()
+    {
+        _gameSounds.PlayFirework();
+        GameObject fireWork1 = Instantiate(_fireWorlEffect);
+        fireWork1.transform.position = new Vector2(-1, 0);
+        yield return new WaitForSeconds(0.1f);
+        _gameSounds.PlayFirework();
+        GameObject fireWork2 = Instantiate(_fireWorlEffect);
+        fireWork2.transform.position = new Vector2(0, 0);
+        yield return new WaitForSeconds(0.1f);
+        _gameSounds.PlayFirework();
+        GameObject fireWork3 = Instantiate(_fireWorlEffect);
+        fireWork3.transform.position = new Vector2(1, 0);
+        yield return new WaitForSeconds(0.1f);
+        _gameSounds.PlayFirework();
+        GameObject fireWork4 = Instantiate(_fireWorlEffect);
+        fireWork4.transform.position = new Vector2(-1, -2);
+        yield return new WaitForSeconds(0.1f);
+        _gameSounds.PlayFirework();
+        GameObject fireWork5 = Instantiate(_fireWorlEffect);
+        fireWork5.transform.position = new Vector2(0, -2);
+        yield return new WaitForSeconds(0.1f);
+        _gameSounds.PlayFirework();
+        GameObject fireWork6 = Instantiate(_fireWorlEffect);
+        fireWork6.transform.position = new Vector2(1, -2);
+    }
+
+    private void ShowEffect()
+    {
+        _gameSounds.PlayWin();
+        GameObject level = Instantiate(_effectLevel);
+        level.transform.position = new Vector2(0, 1);
+        Destroy(level, 2);
+        GameObject completed = Instantiate(_effectCompleted);
+        completed.transform.position = new Vector2(0, -0.5f);
+        Destroy(completed, 2);
     }
 
     public void UnlockFinish()

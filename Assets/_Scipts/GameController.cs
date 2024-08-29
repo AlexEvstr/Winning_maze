@@ -10,6 +10,12 @@ public class GameController : MonoBehaviour
 
     public void MenuButton()
     {
+        StartCoroutine(WaitForSound());
+    }
+
+    private IEnumerator WaitForSound()
+    {
+        yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene("Menu");
     }
 
