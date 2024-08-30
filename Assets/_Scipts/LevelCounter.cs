@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class LevelCounter : MonoBehaviour
 {
@@ -9,10 +10,14 @@ public class LevelCounter : MonoBehaviour
     [SerializeField] private GameObject[] _finishes;
     [SerializeField] private StarsGroup[] _starsGroup;
     [SerializeField] private TMP_Text _levelText;
-    [SerializeField] private GameObject _plane;
+    [SerializeField] private GameObject _characterObject;
     [SerializeField] private GameObject _effectLevel;
     [SerializeField] private GameObject _effectCompleted;
     [SerializeField] private GameObject _fireWorlEffect;
+    [SerializeField] private GameObject[] _charatcerImages;
+    [SerializeField] private Sprite[] _characterSprites;
+    [SerializeField] private SpriteRenderer _characterSprite;
+    private int _characterIndex;
     private GameSounds _gameSounds;
 
     private int _currentLevel;
@@ -21,6 +26,10 @@ public class LevelCounter : MonoBehaviour
 
     private void OnEnable()
     {
+        _characterIndex = PlayerPrefs.GetInt("CurrentCharacter", 0);
+        _characterSprite.sprite = _characterSprites[_characterIndex];
+        _charatcerImages[_characterIndex].SetActive(true);
+
         _labyrinthIndex = PlayerPrefs.GetInt("CurrentLabyrinth", 0);
         _currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
         _labyrinths[_labyrinthIndex].SetActive(true);
@@ -50,14 +59,24 @@ public class LevelCounter : MonoBehaviour
         }
 
         _labyrinths[_labyrinthIndex].SetActive(false);
+        _characterObject.SetActive(false);
         _currentLevel++;
+
         _labyrinthIndex++;
         if (_labyrinthIndex == _labyrinths.Length)
         {
             _labyrinthIndex = 0;
         }
-        PlayerPrefs.SetInt("CurrentLevel", _currentLevel);
+
+        _characterIndex++;
+        if (_characterIndex == _characterSprites.Length)
+        {
+            _characterIndex = 0;
+        }
+
         PlayerPrefs.SetInt("CurrentLabyrinth", _labyrinthIndex);
+        PlayerPrefs.SetInt("CurrentCharacter", _characterIndex);
+        PlayerPrefs.SetInt("CurrentLevel", _currentLevel);
 
         if (_isEffects == 1)
         {
@@ -66,7 +85,8 @@ public class LevelCounter : MonoBehaviour
         }   
 
         yield return new WaitForSeconds(2.0f);
-        _plane.transform.position = new Vector2(0, 3.5f);
+        _characterObject.SetActive(true);
+        _characterObject.transform.position = new Vector2(0, 3.5f);
         _labyrinths[_labyrinthIndex].SetActive(true);
         _levelText.text = _currentLevel.ToString();
     }
