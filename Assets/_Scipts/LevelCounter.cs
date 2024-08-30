@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class LevelCounter : MonoBehaviour
 {
@@ -60,6 +59,7 @@ public class LevelCounter : MonoBehaviour
 
         _labyrinths[_labyrinthIndex].SetActive(false);
         _characterObject.SetActive(false);
+        _charatcerImages[_characterIndex].SetActive(false);
         _currentLevel++;
 
         _labyrinthIndex++;
@@ -86,6 +86,8 @@ public class LevelCounter : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
         _characterObject.SetActive(true);
+        _characterSprite.sprite = _characterSprites[_characterIndex];
+        _charatcerImages[_characterIndex].SetActive(true);
         _characterObject.transform.position = new Vector2(0, 3.5f);
         _labyrinths[_labyrinthIndex].SetActive(true);
         _levelText.text = _currentLevel.ToString();
