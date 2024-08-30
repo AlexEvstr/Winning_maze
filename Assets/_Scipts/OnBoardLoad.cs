@@ -9,6 +9,7 @@ public class OnBoardLoad : MonoBehaviour
 
     private void Start()
     {
+        Screen.orientation = ScreenOrientation.Portrait;
         _itemIndex = PlayerPrefs.GetInt("ItemIndex", 0);
         _items[_itemIndex].SetActive(true);
         _itemIndex++;

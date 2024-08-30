@@ -8,6 +8,11 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject _rules;
     [SerializeField] private Button _rulesBtn;
 
+    private void Start()
+    {
+        Screen.orientation = ScreenOrientation.Portrait;
+    }
+
     public void MenuButton()
     {
         StartCoroutine(WaitForSound());

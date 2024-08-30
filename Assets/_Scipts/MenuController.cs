@@ -15,6 +15,7 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
+        Screen.orientation = ScreenOrientation.Portrait;
         _audioSource = GetComponent<AudioSource>();
         AudioListener.volume = PlayerPrefs.GetFloat("SoundStatus", 1);
         if (AudioListener.volume == 1)
